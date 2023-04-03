@@ -1,4 +1,4 @@
-# sui-ansible
+# sui-automation
 Deploy Sui Fullnodes with Ansible
 
 ## Prerequisites
