@@ -1,0 +1,12 @@
+---
+
+- name: Remove Sui core database files
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+
+  - name: Remove Sui core database files
+    file:
+      path: /opt/sui-db-files/suidb
+      state: absent

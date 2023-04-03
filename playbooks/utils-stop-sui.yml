@@ -1,0 +1,12 @@
+---
+
+- name: Stop Sui
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+
+  - name: Stop Sui via Systemd
+    systemd:
+      name: sui
+      state: stopped

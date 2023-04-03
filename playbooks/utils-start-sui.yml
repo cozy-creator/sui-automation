@@ -1,0 +1,12 @@
+---
+
+- name: Configure fullnode nodes with Sui
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+
+  - name: Start Sui via systemd
+    systemd:
+      name: sui
+      state: started

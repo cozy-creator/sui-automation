@@ -1,0 +1,86 @@
+---
+
+- name: Configure node with Sui files
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+
+    - name: Update rustup
+      # For some reason, these commands don't execute even though they are on $PATH.  So, we have to specify the full path.
+      shell: /home/sui/.cargo/bin/rustup update
+
+    - name: Install Sui via Cargo.
+      shell: /home/sui/.cargo/bin/cargo install --locked --git https://github.com/MystenLabs/sui.git --branch {{ sui_branch }} sui
+      args:
+        chdir: /opt/sui
+
+    - name: Create Sui config directory
+      file:
+        path: /opt/sui/sui-config
+        state: directory
+        mode: '0755'
+        owner: sui
+        group: sui
+
+    - name: Write fullnode.yml
+      template:
+        src: fullnode.yml
+        dest: /opt/sui/sui-config/fullnode.yml
+        owner: sui
+        group: sui
+
+    - name: Create Sui genesis file directory
+      file:
+        path: /opt/sui/sui-genesis-files
+        state: directory
+        mode: '0755'
+        owner: sui
+        group: sui
+
+    - name: Create Sui database directory
+      file:
+        path: /opt/sui/sui-db-files
+        state: directory
+        mode: '0755'
+        owner: sui
+        group: sui
+
+    - name: Check if Sui repo exists
+      stat:
+        path: /opt/sui/sui-repo
+      register: sui_repo_dir
+
+    - name: Clone Sui Git repo
+      when: not sui_repo_dir.stat.exists
+      git:
+        repo: 'https://github.com/sheldonkreger/sui.git'
+        dest: /opt/sui/sui-repo
+        version: '{{ sui_branch }}'
+
+    - name: Resolve dubious ownership of Git repo
+      shell: git config --global --add safe.directory /opt/sui/sui-repo
+
+    - name: Add MystenLabs Sui upstream
+      ignore_errors: true
+      shell: git remote add upstream https://github.com/MystenLabs/sui
+      args:
+        chdir: /opt/sui/sui-repo
+
+    - name: Fetch MystenLabs Sui upstream
+      shell: git fetch upstream
+      args:
+        chdir: /opt/sui/sui-repo
+
+    - name: Track MystenLabs Sui upstream
+      ignore_errors: true
+      shell: git checkout --track upstream/{{ sui_branch }}
+      args:
+        chdir: /opt/sui/sui-repo
+
+    - name: Get genesis file
+      get_url:
+        url: https://github.com/MystenLabs/sui-genesis/raw/main/{{ sui_branch }}/genesis.blob
+        dest: /opt/sui/sui-genesis-files/genesis.blob
+        force: true
+

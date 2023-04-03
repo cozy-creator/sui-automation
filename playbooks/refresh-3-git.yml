@@ -1,0 +1,17 @@
+---
+
+- name: Pull latest Git changes for Sui core
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+
+  - name: Git fetch
+    shell: git fetch --all
+    args:
+      chdir: /opt/sui/sui-repo
+
+  - name: Git pull and rebase
+    shell: git pull --rebase origin {{ sui_branch }}
+    args:
+      chdir: /opt/sui/sui-repo

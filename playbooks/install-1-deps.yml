@@ -1,0 +1,55 @@
+---
+
+- name: Configure fullnode nodes with Sui
+  hosts: fullnodes
+  become: yes
+  remote_user: root
+  tasks:
+  - name: Run the equivalent of "apt-get update"
+    apt:
+      update_cache: yes
+
+  - name: Install dependencies with --no-recommends
+    apt:
+      install_recommends: no
+      pkg:
+      - tzdata
+      - ca-certificates
+      - build-essential
+      - pkg-config
+      - cmake
+
+  - name: Install dependencies
+    apt:
+      pkg:
+      - gcc
+      - git-all
+      - plocate
+      - vim
+      - libpq-dev
+      - libssl-dev
+      - libclang-dev
+      - cmake
+      - rustc
+
+  - name: Clean apt
+    apt:
+      clean: yes
+
+  # - name: Add private key for github
+  #   template:
+  #     src: id_rsa_github
+  #     dest: /home/sui/.ssh
+  #     owner: sui
+  #     group: sui
+  #     mode: '0600'
+  - name: Create /opt/sui directory as root
+    file:
+      path: /opt/sui
+      state: directory
+      mode: '0755'
+      owner: sui
+      group: sui
+
+  - name: Reboot the machine
+    reboot:

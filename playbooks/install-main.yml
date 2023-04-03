@@ -1,0 +1,6 @@
+---
+- import_playbook: install-1-deps.yml
+- import_playbook: install-2-rust.yml
+- import_playbook: install-3-sui.yml
+- import_playbook: install-4-systemd.yml
+- import_playbook: install-5-logtail.yml

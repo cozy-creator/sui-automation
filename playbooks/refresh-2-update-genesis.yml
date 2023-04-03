@@ -1,0 +1,13 @@
+---
+
+- name: Update Genesis file
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+
+  - name: Download new Genesis file and overwrite existing
+    get_url:
+      url: https://github.com/MystenLabs/sui-genesis/raw/main/{{ sui_branch }}/genesis.blob
+      dest: /opt/sui/sui-genesis-files/genesis.blob
+      force: true

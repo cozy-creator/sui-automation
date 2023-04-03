@@ -1,0 +1,21 @@
+db-path: "/opt/sui/sui-db-files/suidb"
+network-address: "/dns/localhost/tcp/8080/http"
+metrics-address: "0.0.0.0:9184"
+json-rpc-address: "0.0.0.0:9000"
+# This param doesn't work and is stuck at 9000.
+websocket-address: "0.0.0.0:9000"
+enable-event-processing: true
+
+genesis:
+  genesis-file-location: "/opt/sui/sui-genesis-files/genesis.blob"
+
+authority-store-pruning-config:
+  num-epochs-to-retain: 3
+  objects-num-latest-versions-to-retain: 5
+  objects-pruning-period-secs: 86400
+  objects-pruning-initial-delay-secs: 3600
+  num-latest-epoch-dbs-to-retain: 3
+  epoch-db-pruning-period-secs: 3600
+  max-checkpoints-in-batch: 200
+  max-transactions-in-batch: 1000
+  use-range-deletion: true
