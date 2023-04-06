@@ -12,10 +12,8 @@
       group: root
       force: true
 
-  - name: Refresh systemd
-    command: systemctl daemon-reload
-
   - name: Enable sui.service
     systemd:
       name: sui.service
       enabled: yes
+      daemon_reload: yes
