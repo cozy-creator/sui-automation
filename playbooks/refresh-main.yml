@@ -4,4 +4,4 @@
 - import_playbook: refresh-1-rm-data.yml
 - import_playbook: refresh-2-update-genesis.yml
 - import_playbook: refresh-3-git.yml
-- import_playbook: utils-start-sui.yml
+# - import_playbook: utils-start-sui.yml

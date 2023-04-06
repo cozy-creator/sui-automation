@@ -1,0 +1,51 @@
+---
+- name: Configure node with Scale3 monitoring agent
+  hosts: fullnodes
+  vars_files:
+  become: no
+  remote_user: sui
+  tasks:
+
+    - name: Create Scale3 agent directory
+      file:
+        path: /opt/sui/scale3
+        state: directory
+        mode: '0755'
+        owner: sui
+        group: sui
+
+    - name: Download and extract Scale3 monitoring agent
+      unarchive:
+        src: https://web-backend.scale3production.com/cli/binary
+        dest: /opt/sui/scale3
+        remote_src: true
+        mode: 0755
+        owner: sui
+        group: sui
+
+    - name: Write Scale3 agent config file
+      template:
+        src: grafana_agent.yml
+        dest: /opt/sui/scale3/grafana_agent.yml
+        mode: 0644
+        owner: sui
+        group: sui
+
+    - name: Write Scale3 agent service file
+      template:
+        src: scale3.service
+        dest: /etc/systemd/system/scale3.service
+        owner: sui
+        group: sui
+      become: yes
+      become_user: root
+
+    - name: Start Scale3 agent
+      systemd:
+        name: scale3
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      become: yes
+      become_user: root
+

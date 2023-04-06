@@ -1,0 +1,40 @@
+server:
+  log_level: info
+metrics:
+  wal_directory: "{{ scale3_wal_directory }}"
+  global:
+    scrape_interval: 15s
+    remote_write:
+      - url: {{ scale3_url }}
+        basic_auth:
+          username: {{ scale3_username }}
+          password: {{ scale3_password }}
+        headers:
+          tenant_id: {{ scale3_tenant_id }}
+        queue_config:
+          # Number of samples to buffer per shard before we start dropping them.
+          capacity: 10000
+          batch_send_deadline: 5s
+          # Maximum number of shards,i.e. amount of concurrency.
+          max_shards: 10
+          min_shards: 1
+          # Maximum number of samples per send.
+          max_samples_per_send: 500
+          # Maximum number of samples per send.
+          min_backoff: 1s
+          max_backoff: 15s
+    external_labels:
+      tenant_id: {{ scale3_tenant_id }}
+      hostname: ${HOSTNAME}
+  configs:
+  - name: "sui"
+    scrape_configs:
+      - job_name: "sui Metrics"
+        honor_timestamps: false
+        static_configs:
+          - targets: ["localhost:9184"]
+integrations:
+  agent:
+    enabled: false
+  node_exporter:
+    enabled: true

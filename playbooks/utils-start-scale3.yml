@@ -1,0 +1,11 @@
+- name: Start Scale3 agent
+  hosts: fullnodes
+  become: no
+  remote_user: sui
+  tasks:
+    - name: Start Scale3 agent
+      systemd:
+        name: scale3-agent
+        state: started
+        enabled: yes
+        daemon_reload: yes
