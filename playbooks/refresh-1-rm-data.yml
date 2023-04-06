@@ -8,5 +8,5 @@
 
   - name: Remove Sui core database files
     file:
-      path: /opt/sui-db-files/suidb
+      path: /opt/sui/sui-db-files/suidb
       state: absent
