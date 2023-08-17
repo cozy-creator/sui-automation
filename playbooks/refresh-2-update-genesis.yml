@@ -1,7 +1,7 @@
 ---
 
 - name: Update Genesis file
-  hosts: fullnodes
+  hosts: fullnode
   become: no
   remote_user: sui
   tasks:

@@ -1,9 +1,10 @@
 ---
 
 - name: Setup systemd for Sui
-  hosts: fullnodes
+  hosts: fullnode
   become: true
   tasks:
+
   - name: Write sui.service
     template:
       src: sui.service

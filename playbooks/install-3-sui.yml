@@ -1,7 +1,7 @@
 ---
 
 - name: Configure node with Sui files
-  hosts: fullnodes
+  hosts: fullnode
   become: no
   remote_user: sui
   tasks:
@@ -10,7 +10,7 @@
       # For some reason, these commands don't execute even though they are on $PATH.  So, we have to specify the full path.
       shell: /home/sui/.cargo/bin/rustup update
 
-    - name: Install Sui via Cargo.
+    - name: Install Sui via Cargo. This could take several minutes.
       shell: /home/sui/.cargo/bin/cargo install --locked --git https://github.com/MystenLabs/sui.git --branch {{ sui_branch }} sui
       args:
         chdir: /opt/sui
@@ -54,7 +54,7 @@
     - name: Clone Sui Git repo
       when: not sui_repo_dir.stat.exists
       git:
-        repo: 'https://github.com/sheldonkreger/sui.git'
+        repo: 'https://github.com/MystenLabs/sui.git'
         dest: /opt/sui/sui-repo
         version: '{{ sui_branch }}'
 

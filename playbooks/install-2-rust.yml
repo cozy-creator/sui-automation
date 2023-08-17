@@ -1,10 +1,14 @@
 ---
 
 - name: Install rust and cargo
-  hosts: fullnodes
+  hosts: 
+  - fullnode
+  - indexer
+  - graphql
   remote_user: sui
   tasks:
-    - name: Check if Cargo is installed
+
+    - name: Check if Cargo is installed. This will fail if it is not, and then proceed to install.
       shell: command -v cargo
       register: cargo_exists
       ignore_errors: yes

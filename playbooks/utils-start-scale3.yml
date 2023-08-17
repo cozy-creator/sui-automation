@@ -1,5 +1,5 @@
 - name: Start Scale3 agent
-  hosts: fullnodes
+  hosts: fullnode
   become: no
   remote_user: sui
   tasks:

@@ -1,71 +1,51 @@
 ---
 
 - name: Setup Logtail
-  hosts: fullnodes
+  hosts: fullnode
   become: true
   tasks:
 
-  - name: Create Vector config directory
-    file:
-      path: /etc/vector
-      state: directory
-      mode: '0755'
-      owner: root
-      group: root
-    tags:
-      - logtail
+  - name: Download fluent-bit GPG key using get_url
+    become: yes
+    ansible.builtin.apt_key:
+      url: https://packages.fluentbit.io/fluentbit.key
+      state: present
 
-  - name: Download Vector configuration script for apt integration
-    get_url:
-      url: https://repositories.timber.io/public/vector/cfg/setup/bash.deb.sh
-      dest: /tmp/bash.deb.sh
-      mode: 0755
-    tags:
-      - logtail
-
-  - name: Run Vector configuraiotn script for apt integration
-    shell: /tmp/bash.deb.sh
-    tags:
-      - logtail
-
-  - name: Add Vector apt preference file
-    copy:
-      content: |
-        Package: vector
-        Pin: version 0.28.0-1
-        Pin-Priority: 999
-      dest: /etc/apt/preferences.d/vector
-    tags:
-      - logtail
-
-  - name: Download Vector configuration file
-    get_url:
-      url: https://logtail.com/vector-toml/ubuntu/dRSmTAqrboDVaN8xg4kMpqPv
-      dest: /etc/vector/vector.toml
-      mode: 0755
-    tags:
-      - logtail
-
-  - name: Run the equivalent of "apt-get update"
+  - name: Equivilent of apt-update
     apt:
+      update_cache: yes
+
+  - name: Add fluent-bit repository to sources list.
+    apt_repository:
+      # Ubuntu 20.04 is called Jammy - change this if needed. Focal will cause issues with install.
+      repo: deb https://packages.fluentbit.io/ubuntu/jammy jammy main
+      state: present
+      filename: 'fluentbit'
       update_cache: yes
 
   - name: Install dependencies
     apt:
       pkg:
-      - vector
-    tags:
-      - logtail
+      - fluent-bit
 
+    
+  - name: Write fluent-bit config file
+    template:
+      src: fluent_bit_fullnode.conf
+      dest: /etc/fluent-bit/fluent-bit.conf
+      mode: 0644
+      owner: sui
+      group: sui
+      
   - name: Refresh systemd
     command: systemctl daemon-reload
 
-  - name: Enable vector.service
+  - name: Enable fluent-bit.service
     systemd:
-      name: vector.service
+      name: fluent-bit.service
       enabled: yes
 
-  - name: Start vector via systemd
+  - name: Start fluent-bit via systemd
     systemd:
-      name: vector.service
+      name: fluent-bit.service
       state: started

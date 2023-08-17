@@ -1,7 +1,7 @@
 ---
 
 - name: Pull latest Git changes for Sui core
-  hosts: fullnodes
+  hosts: fullnode
   become: no
   remote_user: sui
   tasks:

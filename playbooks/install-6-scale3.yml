@@ -1,6 +1,6 @@
 ---
 - name: Configure node with Scale3 monitoring agent
-  hosts: fullnodes
+  hosts: fullnode
   vars_files:
   become: no
   remote_user: sui

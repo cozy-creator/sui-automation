@@ -1,11 +1,11 @@
 ---
 
 - name: Configure fullnode nodes with Sui
-  hosts: fullnodes
+  hosts: fullnode
   become: yes
   remote_user: root
   tasks:
-  - name: Run the equivalent of "apt-get update"
+  - name: Run the equivalent of "apt update"
     apt:
       update_cache: yes
 

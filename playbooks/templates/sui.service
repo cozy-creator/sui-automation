@@ -9,7 +9,6 @@ ExecStart=/home/sui/.cargo/bin/cargo run --release --bin sui-node -- --config-pa
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=65535
-StartLimitIntervalSec=30
 StartLimitBurst=3
 [Install]
 WantedBy=multi-user.target

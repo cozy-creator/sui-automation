@@ -1,7 +1,7 @@
 ---
 
 - name: Remove Sui core database files
-  hosts: fullnodes
+  hosts: fullnode
   become: no
   remote_user: sui
   tasks:

@@ -1,7 +1,7 @@
 ---
 
 - name: Configure fullnode nodes with Sui
-  hosts: fullnodes
+  hosts: fullnode
   become: no
   remote_user: sui
   tasks:
